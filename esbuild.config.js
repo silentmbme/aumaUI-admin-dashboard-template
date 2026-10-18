@@ -44,6 +44,12 @@ async function buildHTMLWithTemplateParts() {
     await fs.writeFile(outputFilePath, htmlContent);
   }
   console.log(`⚡ Processed HTML files ⚡`);
+  // Cloudflare Pages serves this file for the site root. The application
+  // pages remain under `html/`, so send visitors to the landing page.
+  await fs.writeFile(
+    'dist/index.html',
+    '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=/html/landing/"><link rel="canonical" href="/html/landing/"><title>AumaUI</title></head><body><p>Opening <a href="/html/landing/">AumaUI</a>…</p></body></html>\n'
+  );
 }
 
 async function copyDependencies() {
