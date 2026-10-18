@@ -1,0 +1,30 @@
+// Keep the AumaUI wordmark and compact symbol crisp on transparent backgrounds.
+img[src*="brand-logos/"] {
+  object-fit: contain;
+}
+
+.sidenav-menu .sidenav-menu-header .header-logo,
+.topbar .topbar-logo-wrap .header-logo {
+  img[src*="brand-logos/desktop-"] {
+    width: 8.5rem;
+    height: auto;
+  }
+
+  img[src*="brand-logos/toggle-"] {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+.authentication img.authentication-brand,
+img.authentication-brand,
+.invoice-logo img[src*="brand-logos/desktop-"] {
+  width: 11rem;
+  height: auto;
+  max-width: 100%;
+}
+
+.landing-footer .brand-image img {
+  width: 11rem;
+  height: auto;
+}
