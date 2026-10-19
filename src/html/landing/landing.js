@@ -114,23 +114,24 @@
   }, { threshold: 0.08 });
   $$('.reveal').forEach((element) => revealObserver.observe(element));
 
-  // Defer card previews until nearby; eager-load each one once requested so
-  // the browser's own lazy-loading threshold does not add another delay.
-  const dashboardPreviewObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      const frame = entry.target;
-      frame.addEventListener('load', () => {
-        frame.closest('.dashboard-live-preview, .app-live-preview')?.classList.remove('is-loading');
-        settlePreviewTheme();
-      }, { once: true });
-      frame.closest('.dashboard-live-preview, .app-live-preview')?.classList.add('is-loading');
-      frame.loading = 'eager';
-      frame.src = frame.dataset.livePreview;
-      observer.unobserve(frame);
-    });
-  }, { rootMargin: '120px 0px' });
-  $$('.dashboard-live-frame').forEach((frame) => dashboardPreviewObserver.observe(frame));
+  // Use static captures for cards. This preserves the real page design without
+  // making every card navigate a full dashboard and fetch all of its assets.
+  // The live iframe remains available in the main showcase when requested.
+  $$('.dashboard-live-frame').forEach((frame) => {
+    const preview = frame.closest('.dashboard-live-preview, .app-live-preview');
+    const pageName = frame.dataset.livePreview?.split('/').pop()?.replace(/\.html$/, '');
+    if (!preview || !pageName) return;
+    const thumbnail = document.createElement('img');
+    thumbnail.className = 'dashboard-live-thumbnail';
+    thumbnail.src = `../../assets/images/landing-previews/${pageName}.png`;
+    thumbnail.alt = '';
+    thumbnail.loading = 'lazy';
+    thumbnail.decoding = 'async';
+    thumbnail.addEventListener('error', () => preview.classList.add('is-placeholder'), { once: true });
+    frame.replaceWith(thumbnail);
+    preview.classList.replace('is-loading', 'has-thumbnail');
+    preview.classList.add('has-thumbnail');
+  });
 
   const previewPages = {
     sales: { title: 'Sales dashboard', label: 'sales', url: 'index.html', src: '../index.html' },

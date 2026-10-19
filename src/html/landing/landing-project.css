@@ -674,8 +674,27 @@ h6,
   opacity: 0;
   transition: opacity .35s ease;
 }
-.dashboard-live-preview:not(.is-loading) .dashboard-live-frame {
+.dashboard-live-thumbnail {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+.dashboard-live-preview:not(.is-loading):not(.is-placeholder) .dashboard-live-frame {
   opacity: 1;
+}
+.dashboard-live-preview.is-placeholder::after {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--surface-2), var(--surface));
+  color: var(--muted);
+  content: "Live preview available on demand";
+  font-size: 11px;
+  text-align: center;
 }
 .dashboard-live-preview.is-loading::after {
   position: absolute;
